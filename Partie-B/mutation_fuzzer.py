@@ -20,8 +20,9 @@ class MutationFuzzer:
         seed = random.choice(self.seeds)
         return self.mutate(seed)
 
-
-random.seed(123)
+random_seed = 2192826
+random.seed(random_seed)
+print(f'The random seed is {random_seed}')
 seed = "https://www.polymtl.ca"
 mutation_fuzzer = MutationFuzzer([seed])
 

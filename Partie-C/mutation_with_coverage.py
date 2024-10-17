@@ -8,6 +8,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../Part
 from random_fuzzer import RandomFuzzer
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../Partie-B')))
 from mutation_fuzzer import MutationFuzzer
+from num2words import num2words # pip install num2words
 
 
 class Coverage:
@@ -49,20 +50,41 @@ def calculate_cumulative_coverage(input_population, function):
     return cumulative_coverage
 
 
-def plot(cumulative_coverage):
-    plt.plot(cumulative_coverage)
+def plot(cumulative_coverages, titles):
+    for cumulative_coverage in cumulative_coverages:
+        plt.plot(cumulative_coverage)
+    plt.legend(titles)
     plt.title('Coverage')
     plt.xlabel('# of inputs')
     plt.ylabel('lines covered')
     plt.show()
 
+# TODO
+class CustomFuzzer:
+    def __init__(self):
+        pass
+
+    def fuzz(self):
+        pass
+
 # Exemple de couverture avec MutationFuzzer à modifier pour les tâches de la Partie-C
-random.seed(123)
+random_seed = 2192826
+random.seed(random_seed)
 trials = 500
-fuzzer = MutationFuzzer(seeds=["http://www.polymtl.ca"])
+random_fuzzer = RandomFuzzer()
+mutation_fuzzer = MutationFuzzer(seeds=["3452020"])
+custom_fuzzer = CustomFuzzer()
 
-input_set = [fuzzer.fuzz() for _ in range(trials)]
+random_input_set = [random_fuzzer.fuzz() for _ in range(trials)]
+mutation_input_set = [mutation_fuzzer.fuzz() for _ in range(trials)]
+custom_input_set = [custom_fuzzer.fuzz() for _ in range(trials)]
 
-cumulative_coverage = calculate_cumulative_coverage(
-    input_set, url_parser.is_valid_url)
-plot(cumulative_coverage)
+random_cumulative_coverage = calculate_cumulative_coverage(
+    random_input_set, num2words)
+mutation_cumulative_coverage = calculate_cumulative_coverage(
+    mutation_input_set, num2words)
+custom_fuzzer_cumulative_coverage = calculate_cumulative_coverage(
+    custom_input_set, num2words)
+plot([random_cumulative_coverage, mutation_cumulative_coverage],
+     ['RandomFuzzer', 'MutationFuzzer', 'CustomFuzzer']
+)

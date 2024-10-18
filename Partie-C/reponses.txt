@@ -1,0 +1,15 @@
+5.a) capture d'écran
+
+5.b) Sur le graphique on a 3 courbes :
+- RandomFuzzer : 0 avec environ 7% de coverage, en effet ce fuzzer ne fait que générer des chaînes aléatoire et n'envoie donc aucune
+donnée pertinente = nombres en chiffres pouvant être décrit en lettre
+- MutationFuzzer : très bonne couverture de 90%
+- CustomFuzzer : atteint environ 91.2% de couverture, ce Fuzzer est adapté à la fonction num2words et envoie des données pertinente qui visent à tester les différentes parties du code ce qui explique son efficacité accrue :
+	- des nombres, à virgule ou non, positif ou négatif, parfois convertis en string
+	- des nombres trop grand par apport au dictionnaire disponible sur Num2Words
+	- des chaînes de caractère random en utilisant un RandomFuzzer
+	- des types invalide comme une liste
+
+5.c) captures d'écran
+
+6) Nous avons utilisé la technique du fuzzing en boîte blanche, c'est à dire que nous avons regardé le code source de Num2Words afin de savoir quel type d'entrée envoyer dans num2words afin de couvrir le plus de ligne possible. En effet, notre but étant de faire un Fuzzer le plus efficace possible spécifiquement pour Num2Words, il est plutôt cohérent d'aller regarder dans le code source de la fonction à tester afin de savoir les entrées les plus pertinente à générer pour le code en question. 

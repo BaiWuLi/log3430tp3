@@ -103,10 +103,6 @@ class CustomFuzzer:
             if to_str:
                 result = str(result)
             
-          
-
-        print("Fuzzed input: ", result, type(result))
-
         return result
 
 # Exemple de couverture avec MutationFuzzer à modifier pour les tâches de la Partie-C

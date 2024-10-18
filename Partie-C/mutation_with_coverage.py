@@ -59,13 +59,55 @@ def plot(cumulative_coverages, titles):
     plt.ylabel('lines covered')
     plt.show()
 
-# TODO
 class CustomFuzzer:
-    def __init__(self):
-        pass
+    def __init__(self, min_base=0, max_base=9, min_digits=1, max_digits=5):
+        self.min_base = min_base
+        self.max_base = max_base
+        self.min_digits = min_digits
+        self.max_digits = max_digits
+        self.multipliers = [10**i for i in range(0, 6)]
+        self.random_fuzzer = RandomFuzzer()
+        
+    def make_choice(self, true_prob, false_prob):
+        return random.choices([True, False], [true_prob, false_prob])[0]
+
+    def generate_complex_number(self):
+        num_digits = random.randint(self.min_digits, self.max_digits)
+        digits = [str(random.randint(self.min_base, self.max_base)) for _ in range(num_digits)]
+        complex_number = int(''.join(digits))
+        return complex_number
 
     def fuzz(self):
-        pass
+        use_random_fuzzer = self.make_choice(0.05, 0.95)
+
+        if use_random_fuzzer:
+            result = self.random_fuzzer.fuzz()
+        else:
+            base = self.generate_complex_number()
+            multiplier = random.choice(self.multipliers)
+            multiply = self.make_choice(0.5, 0.5)
+            negative = self.make_choice(0.5, 0.5)
+
+            if multiply:
+                result = base * multiplier
+            else:
+                result = base / multiplier
+
+            result *= -1 if negative else 1
+            
+            make_list = self.make_choice(0.05, 0.95)
+            if make_list:
+                result = [result]
+
+            to_str = self.make_choice(0.5, 0.5)
+            if to_str:
+                result = str(result)
+            
+          
+
+        print("Fuzzed input: ", result, type(result))
+
+        return result
 
 # Exemple de couverture avec MutationFuzzer à modifier pour les tâches de la Partie-C
 random_seed = 2192826
@@ -85,6 +127,6 @@ mutation_cumulative_coverage = calculate_cumulative_coverage(
     mutation_input_set, num2words)
 custom_fuzzer_cumulative_coverage = calculate_cumulative_coverage(
     custom_input_set, num2words)
-plot([random_cumulative_coverage, mutation_cumulative_coverage],
+plot([random_cumulative_coverage, mutation_cumulative_coverage, custom_fuzzer_cumulative_coverage],
      ['RandomFuzzer', 'MutationFuzzer', 'CustomFuzzer']
 )
